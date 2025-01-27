@@ -8,7 +8,7 @@ import (
 )
 
 // Read raw byte array from a 1-wire device
-func (oc *OwfsClient) Read(path string) (string, error) {
+func (oc *OwfsClient) Read(path string, debug bool) (string, error) {
 	conn, err := net.Dial("tcp", oc.connString)
 	if err != nil {
 		return "", fmt.Errorf("Failed to connect to owserver: %s", err)
@@ -49,7 +49,9 @@ func (oc *OwfsClient) Read(path string) (string, error) {
 		}
 		return strings.TrimSpace(string(buf)), nil
 	} else {
-		response.dump()
+		if debug {
+			response.dump()
+		}
 		return "", fmt.Errorf("Zero length data for device %s", path)
 	}
 }
